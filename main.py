@@ -628,6 +628,15 @@ df.columns を使うことで列名を変更できる
 ・在庫不足のテスト
 """
 
+"""
+2026-10-12
+内容：
+・users_tableの作成
+・jobs_tableの作成
+・データの挿入
+・内部結合
+"""
+
 import pytest
 from fastapi.testclient import TestClient
 from order_system.order_system_API import app, order_repo, user_repo, product_repo
