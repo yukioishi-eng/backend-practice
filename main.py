@@ -644,3 +644,50 @@ df.columns を使うことで列名を変更できる
 ・SQLlogの出力
 ・データベースのテーブル表示
 """
+
+"""
+2026-10-14
+内容：
+・Baseの継承
+・Pythonによるテーブルの作成
+・テーブル名の設定
+・型ヒント(Mapped)
+・カラム定義(mapped_column)
+・主キーの設定(primary key)
+・NULL制約の設定(nullable)
+・レコード登録時のidの自動割り当て(default = uuid.uuid4)
+"""
+
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy import Text, Uuid, Date
+import uuid
+from datetime import date
+
+class Base(DeclarativeBase):
+    pass
+
+#sqlalchemyではテーブルをクラスで表現する
+#Baseを継承することで、PythonのクラスとDBのテーブルを自動で紐付けてくれる
+class User(Base):
+    __tablename__ = "users"
+    #テーブルのカラムはインスタンス変数として定義
+    id: Mapped[uuid.UUID] = mapped_column(
+        Uuid, 
+        primary_key = True,
+        default = uuid.uuid4    #テーブルに登録した時に自動でidを割り当てる設定
+    )
+
+    name: Mapped[str] = mapped_column(
+        Text, 
+        nullable = False,
+        unique = True
+    )
+    #Mappedは型ヒント、mapped_columnはデータベース上の制約（primary_key, nullable, defaultなど）を指定、nulllableは変数にNULLを許すかどうか
+
+    birthday: Mapped[date] = mapped_column(
+        Date,
+        nullable = True
+    )
+
+
+    
