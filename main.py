@@ -658,10 +658,21 @@ df.columns を使うことで列名を変更できる
 ・レコード登録時のidの自動割り当て(default = uuid.uuid4)
 """
 
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
-from sqlalchemy import Text, Uuid, Date
+"""
+2026-10-15
+内容：
+・postsテーブルの作成
+・外部キーの設定
+・タイムゾーンを指定した日時記録
+・カラム変更時の日時の自動更新
+・relationship
+"""
+
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from sqlalchemy import Text, Uuid, Date, ForeignKey, DateTime
 import uuid
-from datetime import date
+from datetime import date, datetime
+from zoneinfo import ZoneInfo
 
 class Base(DeclarativeBase):
     pass
@@ -688,6 +699,47 @@ class User(Base):
         Date,
         nullable = True
     )
+    posts: Mapped[list["Post"]] = relationship(
+        back_populates = "user"
+    )
+    #relationshipは外部キーなどのPythonのオブジェクト同士のつながりとして直感的に扱うための機能
+    #よって、DBには関係ない
+    #例えば、あるユーザの投稿一覧などをすぐに見れたりする
 
 
-    
+class Post(Base):
+    __tablename__ = "posts"
+    id: Mapped[uuid.UUID] = mapped_column(
+            Uuid, 
+            primary_key = True,
+            default = uuid.uuid4   
+        )
+    #記事のタイトル
+    title: Mapped[str] = mapped_column(Text, nullable = False)
+    #本文
+    body: Mapped[str] = mapped_column(Text, nullable = False)
+    #usersテーブルのidに紐づく外部キー
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("users.id"),
+        #引数には紐づいているテーブル名.カラム名
+        nullable = False
+    )
+    #投稿日時
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone = True),
+        default = lambda: datetime.now(ZoneInfo("Asia/Tokyo"))
+    )
+    #更新日時
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone = True),
+        default = lambda: datetime.now(ZoneInfo("Asia/Tokyo")),
+        #lambda式はコロン後の処理を呼び出す即席の関数のようなもの
+        #本来はlambdaの後ろに関数に代入する変数があるが、関数を呼び出すだけなので、不要
+
+        onupdate = lambda: datetime.now(ZoneInfo("Asia/Tokyo"))
+        #カラムの内容が変更されるごとに記録し直す
+    )
+    #dateとdatetimeの違いは時刻が不要かどうか(更新日時などのログは秒まで必要)
+    user: Mapped["User"] = relationship(
+        back_populates = "posts"
+    )
