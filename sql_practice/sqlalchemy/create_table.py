@@ -1,10 +1,6 @@
-import sys
-from pathlib import Path
-
 from sqlalchemy import create_engine, inspect
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-from main import Base
+from table_detail import Base
 
 def main():
     #データベースとの接続
