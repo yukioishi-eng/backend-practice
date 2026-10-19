@@ -1,0 +1,14 @@
+Python型	        SQLAlchemy型
+int	                Integer
+str	                String
+bool	            Boolean
+float	            Float
+decimal.Decimal	    Numeric
+bytes	            LargeBinary
+datetime.datetime	DateTime
+datetime.date	    Date
+datetime.time	    Time
+datetime.timedelta	Interval
+uuid.UUID	        Uuid
+enum.Enum のサブクラス	Enum
+Literal["a", "b"]	Enum(文字列として)
