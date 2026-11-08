@@ -27,7 +27,7 @@ def create_dispatcher():
     return dispatcher
 
 
-def test_pay_order_insufficient_balance():
+def test_pay_order_insufficient_balance_use_case():
     order_repo = InMemoryOrderRepository()
     user_repo = InMemoryUserRepository()
     product_repo = InMemoryProductRepository()
@@ -48,7 +48,7 @@ def test_pay_order_insufficient_balance():
         usecase.execute(OrderId(1))
 
 
-def test_pay_order_out_of_stock():
+def test_pay_order_out_of_stock_use_case():
     order_repo = InMemoryOrderRepository()
     user_repo = InMemoryUserRepository()
     product_repo = InMemoryProductRepository()
