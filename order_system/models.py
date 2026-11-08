@@ -76,10 +76,10 @@ class OrderModel(Base):
         default = 0
     )
 
-    users: Mapped["UserModel"] = relationship(
+    user: Mapped["UserModel"] = relationship(
         back_populates = "orders"
     )
 
-    products: Mapped["ProductModel"] = relationship(
+    product: Mapped["ProductModel"] = relationship(
             back_populates = "orders"
     )
