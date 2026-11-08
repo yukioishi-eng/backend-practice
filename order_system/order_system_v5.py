@@ -84,13 +84,21 @@ class Product:
         if stock < 0:
             raise ValueError()
 
-        self.id = product_id
+        self._id = product_id
         self._price = price
         self._stock = stock
 
     @property
+    def id(self):
+        return self._id
+    
+    @property
     def price(self):
         return self._price
+
+    @property
+    def stock(self):
+        return self._stock
 
     def decrease_stock(self):
         if self._stock == 0:
@@ -106,8 +114,15 @@ class User:
         if balance < 0:
             raise ValueError()
 
-        self.id = user_id
+        self._id = user_id
         self._balance = balance
+
+    @property
+    def id(self):
+        return self._id
+    @property
+    def balance(self):
+        return self._balance
 
     def pay(self, amount: int):
         if self._balance < amount:
