@@ -175,7 +175,13 @@ ALLOWED_TRANSITIONS = {
 
 
 class Order:
-    def __init__(self, order_id, user_id, product_id, coupon: Optional[Coupon] = None):
+    def __init__(self, 
+        order_id, 
+        user_id, 
+        product_id, 
+        status: OrderStatus = OrderStatus.CREATED, 
+        paid_amount: int = 0, coupon: Optional[Coupon] = None
+    ):
         self._id = order_id
         self._user_id = user_id
         self._product_id = product_id
