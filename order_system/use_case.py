@@ -20,8 +20,8 @@ class CreateOrderUseCase:
             order_id = OrderId(order_id), 
             user_id = user.id, 
             product_id = product.id,
-            status=OrderStatus.PAID,
-            paid_amount=product.price
+            status = OrderStatus.PAID,
+            paid_amount = product.price
         )
 
         self._order_repo.save(order)
