@@ -11,15 +11,19 @@ class SQLAlchemyOrderRepository(OrderRepository):
         model = self._session.get(OrderModel, orderid.value)
         if model is None:
             raise KeyError("Order not found")
+
+        #model.statusが文字列ならEnum型に変換して,それ以外ならそのまま代入(statusの管理がEnum型だから)
+        status = OrderStatus[model.status] if isinstance(model.status, str) else model.status
+        paid_amount = model.paid_amount
         
         order = Order(
-            order_id=OrderId(model.id),
-            user_id=model.user_id,
-            product_id=model.product_id
+            order_id = OrderId(model.id),
+            user_id = model.user_id,
+            product_id = model.product_id, 
+            status = status, 
+            paid_amount = paid_amount
+
         )
-        #model.statusが文字列ならEnum型に変換して,それ以外ならそのまま代入(statusの管理がEnum型だから)
-        order._status = OrderStatus[model.status] if isinstance(model.status, str) else model.status
-        order._paid_amount = model.paid_amount
 
         return order
 
@@ -32,7 +36,7 @@ class SQLAlchemyOrderRepository(OrderRepository):
                 user_id = order.user_id,
                 product_id = order.product_id,
                 status = order.status.name,
-                paid_amount = order._paid_amount  
+                paid_amount = order.paid_amount  
             )
             self._session.add(model)
         else:
@@ -40,7 +44,7 @@ class SQLAlchemyOrderRepository(OrderRepository):
             model.user_id = order.user_id
             model.product_id = order.product_id
             model.status = order.status.name
-            model.paid_amount = order._paid_amount  
+            model.paid_amount = order.paid_amount  
         self._session.commit()
 
 class SQLAlchemyUserRepository(UserRepository):
