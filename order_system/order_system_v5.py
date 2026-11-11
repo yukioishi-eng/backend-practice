@@ -180,15 +180,16 @@ class Order:
         user_id, 
         product_id, 
         status: OrderStatus = OrderStatus.CREATED, 
-        paid_amount: int = 0, coupon: Optional[Coupon] = None
+        paid_amount: int = 0, 
+        coupon: Optional[Coupon] = None
     ):
         self._id = order_id
         self._user_id = user_id
         self._product_id = product_id
         self._coupon = coupon
-        self._status = OrderStatus.CREATED
+        self._status = status
         self._events = []
-        self._paid_amount = 0
+        self._paid_amount = paid_amount
 
     @property
     def id(self):
@@ -209,6 +210,10 @@ class Order:
     @property
     def status(self):
         return self._status
+
+    @property
+    def paid_amount(self):
+        return self._paid_amount
 
     def clear_events(self):
         self._events.clear()
