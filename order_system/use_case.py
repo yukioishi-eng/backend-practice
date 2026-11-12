@@ -1,10 +1,11 @@
 from order_system.order_system_v5 import Order, OrderStatus, OrderId, User, Product
 
 class PayOrderUseCase:
-    def __init__(self, user_repo, product_repo, order_repo):
+    def __init__(self, user_repo, product_repo, order_repo, dispatcher):
        self._user_repo = user_repo
        self._product_repo = product_repo
        self._order_repo = order_repo
+       self._dispatcher = dispatcher
 
     def execute(self, user_id: int, product_id: int, order_id: int) -> Order:
         user = self._user_repo.get(user_id)
@@ -20,10 +21,12 @@ class PayOrderUseCase:
             order_id = OrderId(order_id), 
             user_id = user.id, 
             product_id = product.id,
-            status = OrderStatus.PAID,
             paid_amount = product.price
         )
+        order.mark_as_paid(product.price)
 
         self._order_repo.save(order)
+        self._dispatcher.dispatch(order.events)
+        order.clear_events()
 
         return order
