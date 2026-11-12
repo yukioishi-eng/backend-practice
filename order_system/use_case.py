@@ -1,6 +1,6 @@
 from order_system.order_system_v5 import Order, OrderStatus, OrderId, User, Product
 
-class CreateOrderUseCase:
+class PayOrderUseCase:
     def __init__(self, user_repo, product_repo, order_repo):
        self._user_repo = user_repo
        self._product_repo = product_repo
