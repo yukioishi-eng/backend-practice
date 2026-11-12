@@ -281,7 +281,6 @@ class PayOrderUseCase:
 
 
 # インフラ層
-#
 class EventDispatcher:
     def __init__(self):
         self._handlers = {}
